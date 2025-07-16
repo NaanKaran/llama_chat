@@ -1,78 +1,108 @@
-🧱 Features:
+# Llama Chat
 
-Frontend: Chat UI (React + Tailwind)
+Llama Chat is a planned chat application that illustrates how a lightweight web frontend can talk to a backend which in turn forwards requests to a large language model provider. The repository serves as a simple template for prototyping your own LLM-powered apps.
 
-Backend: FastAPI server with OpenAI-compatible API format (/v1/chat/completions)
+## Project Goals
 
-LLM: Load llama4-maverick model using HuggingFace transformers + vllm or llama-cpp-python
+- Provide a minimal conversational interface backed by an LLM service
+- Keep frontend and backend code clearly separated
+- Offer containerized development and deployment
 
-Session & history tracking via PostgreSQL or DuckDB
+## Planned Architecture
 
-Authentication: optional JWT-based
+```
+[React Client] <-> [Backend API] <-> [LLM Provider]
+```
 
-🚢 Deployment Requirements:
+- **Frontend** – Handles user input and renders chat history
+- **Backend** – Receives messages, passes them to the LLM service and streams results
+- **LLM Provider** – Any service that exposes a chat completion API
 
-Complete Docker Swarm setup with:
+## Directory Structure
 
-frontend service (React app)
+- `frontend/` – React client built with Vite
+- `backend/` – FastAPI server acting as a proxy to the LLM provider
+- `docker-compose.yml` – Compose file to run both services together (planned)
 
-backend service (FastAPI)
+## Prerequisites
 
-model service (LLM with GPU or CPU fallback)
+- [Docker](https://www.docker.com/) and Docker Compose
+- Node.js for frontend development
+- Python 3.10+ for backend development
 
-optional db service (PostgreSQL or DuckDB file volume)
+## Environment Variables
 
-One-click deploy via docker stack deploy
+Backend variables:
 
-Configurable with .env file
+- `LLM_PROVIDER_API_KEY` – API key for your language model provider
+- `LLM_PROVIDER_URL` – Endpoint for the provider's API
+- `PORT` – Port for the backend server (defaults to `8000`)
 
-📦 Output:
+Frontend variables:
 
-Docker Swarm-compatible docker-compose.yml
+- `VITE_API_URL` – URL of the backend API
 
-Backend FastAPI app with chat endpoint
+Create a `.env` file in each component with values similar to the example below:
 
-React frontend with nice chat UI
+```
+LLM_PROVIDER_API_KEY=your-key
+LLM_PROVIDER_URL=https://api.example.com/v1
+PORT=8000
+VITE_API_URL=http://localhost:8000
+```
 
-Script to download model (llama4-maverick)
+## Setup and Running Locally
 
-Swarm deployment script with labels, health checks, restart policies
+1. Clone this repository
+2. Install dependencies for the frontend and backend
+3. Add the required environment variables
+4. Start the backend server
+5. Start the frontend development server
 
-🧠 Additional Considerations:
+### Backend
 
-Include token streaming support in backend (yield via FastAPI SSE or WebSocket)
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port $PORT
+```
 
-Add system prompt/personality injection support
+### Frontend
 
-Optional rate limiting and logging
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-📁 Directory Structure:
+## Docker Usage
 
-bash
-Copy
-Edit
-/llama-chat
-  /frontend
-  /backend
-  /model
-  /scripts
-  docker-compose.yml
-  .env
-  deploy.sh
-You can paste this directly in Codex or Claude and ask it to:
+If you prefer running everything in containers, use Docker Compose:
 
-"Generate the full project based on the above specification step by step. Start with the folder structure and then implement each component (backend, frontend, Docker config)."
+```bash
+docker compose up --build
+```
 
-Bonus: One-liner Prompt for Codex
-If you want a condensed version:
+This starts both services and exposes the web UI at `http://localhost:3000`.
 
-🚀 Build a ChatGPT-like full-stack project using llama4-maverick model with:
+## Frontend Overview
 
-FastAPI backend (/v1/chat/completions)
+- Built with Vite + React
+- Communicates with the backend over REST or streaming endpoints
+- Stores only minimal state such as chat history in memory or browser storage
 
-React + Tailwind frontend
+## Backend Overview
 
-Docker Swarm support (frontend, backend, model, optional DB)
+- Implemented with FastAPI (or a similar framework)
+- Provides endpoints to submit user messages and stream responses
+- Relays authentication and requests to the LLM provider
 
-One-click deployment with docker stack deploy
-Include streaming support, persona injection, model loading via HuggingFace or llama.cpp, and .env support. Output: full folder structure, source code, and deploy script.
+## Contributing
+
+This project is in the early stages. Feel free to fork it and try alternative architectures or providers.
+
+## License
+
+MIT License
