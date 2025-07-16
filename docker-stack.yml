@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend:
+    image: llama-chat-backend
+    environment:
+      REPLICATE_API_TOKEN: ${REPLICATE_API_TOKEN}
+      LLAMA_MODEL: ${LLAMA_MODEL:-llama4:maverick}
+    ports:
+      - "8000:8000"
+    deploy:
+      replicas: 1
+  frontend:
+    image: llama-chat-frontend
+    environment:
+      VITE_API_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+networks:
+  default:
+    driver: overlay

@@ -1,6 +1,6 @@
 # Llama Chat
 
-Llama Chat is a planned chat application that illustrates how a lightweight web frontend can talk to a backend which in turn forwards requests to a large language model provider. The repository serves as a simple template for prototyping your own LLM-powered apps.
+Llama Chat is a chat application that illustrates how a lightweight web frontend can talk to a backend which in turn forwards requests to a large language model provider. The repository serves as a simple template for prototyping your own LLM-powered apps.
 
 ## Project Goals
 
@@ -22,7 +22,9 @@ Llama Chat is a planned chat application that illustrates how a lightweight web 
 
 - `frontend/` – React client built with Vite
 - `backend/` – FastAPI server acting as a proxy to the LLM provider
-- `docker-compose.yml` – Compose file to run both services together (planned)
+- `docker-compose.yml` – Compose file to run both services together
+- `docker-stack.yml` – Swarm stack definition
+- `deploy.sh` – Helper script for one-click deployment
 
 ## Prerequisites
 
@@ -34,8 +36,8 @@ Llama Chat is a planned chat application that illustrates how a lightweight web 
 
 Backend variables:
 
-- `LLM_PROVIDER_API_KEY` – API key for your language model provider
-- `LLM_PROVIDER_URL` – Endpoint for the provider's API
+- `REPLICATE_API_TOKEN` – API token for Replicate
+- `LLAMA_MODEL` – Model reference to use (defaults to `llama4:maverick`)
 - `PORT` – Port for the backend server (defaults to `8000`)
 
 Frontend variables:
@@ -45,8 +47,8 @@ Frontend variables:
 Create a `.env` file in each component with values similar to the example below:
 
 ```
-LLM_PROVIDER_API_KEY=your-key
-LLM_PROVIDER_URL=https://api.example.com/v1
+REPLICATE_API_TOKEN=your-token
+LLAMA_MODEL=llama4:maverick
 PORT=8000
 VITE_API_URL=http://localhost:8000
 ```
@@ -79,13 +81,19 @@ npm run dev
 
 ## Docker Usage
 
-If you prefer running everything in containers, use Docker Compose:
+If you prefer running everything in containers, use the helper script:
 
 ```bash
-docker compose up --build
+./deploy.sh
 ```
 
-This starts both services and exposes the web UI at `http://localhost:3000`.
+To deploy on a Docker Swarm cluster:
+
+```bash
+./deploy.sh swarm
+```
+
+Both methods start the services and expose the web UI at `http://localhost:3000`.
 
 ## Frontend Overview
 

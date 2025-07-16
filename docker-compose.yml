@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    image: llama-chat-backend
+    volumes:
+      - ./backend/app:/app/app
+    ports:
+      - "8000:8000"
+    environment:
+      - REPLICATE_API_TOKEN=${REPLICATE_API_TOKEN}
+      - LLAMA_MODEL=${LLAMA_MODEL:-llama4:maverick}
+  frontend:
+    build: ./frontend
+    image: llama-chat-frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    command: ["npm", "run", "dev", "--", "--host"]
