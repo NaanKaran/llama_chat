@@ -1,32 +1,38 @@
 # Llama Chat
 
-Llama Chat is a planned chat application designed to demonstrate how a lightweight frontend can communicate with a backend that serves as a bridge to a large language model. The project aims to provide a template for rapid prototyping of LLM-based web apps.
+Llama Chat is a planned chat application that illustrates how a lightweight web frontend can talk to a backend which in turn forwards requests to a large language model provider. The repository serves as a simple template for prototyping your own LLM-powered apps.
 
 ## Project Goals
 
-- Simple conversational interface backed by an LLM service
-- Clearly separated frontend and backend components for easy customization
-- Containerized setup to make development and deployment straightforward
+- Provide a minimal conversational interface backed by an LLM service
+- Keep frontend and backend code clearly separated
+- Offer containerized development and deployment
 
 ## Planned Architecture
 
 ```
-[Client (React)] <-> [Backend API] <-> [LLM Provider]
+[React Client] <-> [Backend API] <-> [LLM Provider]
 ```
 
-- **Frontend**: A React application that handles user interaction and displays chat history
-- **Backend**: A lightweight API that accepts messages, forwards them to an LLM service (e.g., OpenAI or a self-hosted model), and streams responses back to the frontend
-- **LLM Provider**: This can be any service exposing a chat completion API
+- **Frontend** – Handles user input and renders chat history
+- **Backend** – Receives messages, passes them to the LLM service and streams results
+- **LLM Provider** – Any service that exposes a chat completion API
+
+## Directory Structure
+
+- `frontend/` – React client built with Vite
+- `backend/` – FastAPI server acting as a proxy to the LLM provider
+- `docker-compose.yml` – Compose file to run both services together (planned)
 
 ## Prerequisites
 
 - [Docker](https://www.docker.com/) and Docker Compose
-- Node.js (for local frontend development)
-- Python 3.10+ (for local backend development)
+- Node.js for frontend development
+- Python 3.10+ for backend development
 
 ## Environment Variables
 
-The backend relies on the following variables:
+Backend variables:
 
 - `LLM_PROVIDER_API_KEY` – API key for your language model provider
 - `LLM_PROVIDER_URL` – Endpoint for the provider's API
@@ -36,13 +42,20 @@ Frontend variables:
 
 - `VITE_API_URL` – URL of the backend API
 
-Create a `.env` file in each component to set these values when running locally.
+Create a `.env` file in each component with values similar to the example below:
+
+```
+LLM_PROVIDER_API_KEY=your-key
+LLM_PROVIDER_URL=https://api.example.com/v1
+PORT=8000
+VITE_API_URL=http://localhost:8000
+```
 
 ## Setup and Running Locally
 
 1. Clone this repository
 2. Install dependencies for the frontend and backend
-3. Set the environment variables
+3. Add the required environment variables
 4. Start the backend server
 5. Start the frontend development server
 
@@ -66,29 +79,29 @@ npm run dev
 
 ## Docker Usage
 
-The repository includes a `docker-compose.yml` that builds both components and runs them together.
+If you prefer running everything in containers, use Docker Compose:
 
 ```bash
 docker compose up --build
 ```
 
-This will start the backend and frontend services so you can access the application at `http://localhost:3000`.
+This starts both services and exposes the web UI at `http://localhost:3000`.
 
 ## Frontend Overview
 
 - Built with Vite + React
-- Communicates with the backend over a REST/streaming API
-- Stores minimal state (chat history) in memory or browser storage
+- Communicates with the backend over REST or streaming endpoints
+- Stores only minimal state such as chat history in memory or browser storage
 
 ## Backend Overview
 
-- Implemented with FastAPI (or similar framework)
+- Implemented with FastAPI (or a similar framework)
 - Provides endpoints to submit user messages and stream responses
-- Handles authentication and relay to the LLM provider
+- Relays authentication and requests to the LLM provider
 
 ## Contributing
 
-This project is in its early stages. Feel free to fork it and experiment with alternative architectures or providers.
+This project is in the early stages. Feel free to fork it and try alternative architectures or providers.
 
 ## License
 
