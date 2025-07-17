@@ -36,8 +36,9 @@ Llama Chat is a chat application that illustrates how a lightweight web frontend
 
 Backend variables:
 
-- `REPLICATE_API_TOKEN` – API token for Replicate
-- `LLAMA_MODEL` – Model reference to use (defaults to `llama4:maverick`)
+- `REPLICATE_API_TOKEN` – API token for Replicate (used when `LLAMA_MODEL_PATH` is not set)
+- `LLAMA_MODEL` – Model reference to use with Replicate (defaults to `llama4:maverick`)
+- `LLAMA_MODEL_PATH` – Path to a local GGUF model file; if provided the backend runs locally using `llama-cpp`
 - `PORT` – Port for the backend server (defaults to `8000`)
 
 Frontend variables:
@@ -47,10 +48,14 @@ Frontend variables:
 Create a `.env` file in each component with values similar to the example below:
 
 ```
+# Example using Replicate
 REPLICATE_API_TOKEN=your-token
 LLAMA_MODEL=llama4:maverick
 PORT=8000
 VITE_API_URL=http://localhost:8000
+
+# Example using a local model
+# LLAMA_MODEL_PATH=/path/to/model.gguf
 ```
 
 ## Setup and Running Locally
@@ -70,6 +75,8 @@ source venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port $PORT
 ```
+If `LLAMA_MODEL_PATH` is set to a local GGUF file, the backend will load it
+using `llama-cpp` instead of contacting Replicate.
 
 ### Frontend
 
@@ -105,7 +112,7 @@ Both methods start the services and expose the web UI at `http://localhost:3000`
 
 - Implemented with FastAPI (or a similar framework)
 - Provides endpoints to submit user messages and stream responses
-- Relays authentication and requests to the LLM provider
+- Relays authentication and requests to the LLM provider or runs a local model when `LLAMA_MODEL_PATH` is set
 
 ## Contributing
 
